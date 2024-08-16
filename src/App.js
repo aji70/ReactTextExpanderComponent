@@ -1,3 +1,5 @@
+import { useState } from "react";
+import React from "react";
 import "./styles.css";
 
 export default function App() {
@@ -10,7 +12,6 @@ export default function App() {
         are constantly venturing out into the cosmos to uncover its secrets and
         push the boundaries of what's possible.
       </TextExpander>
-
       <TextExpander
         collapsedNumWords={20}
         expandButtonText="Show text"
@@ -24,7 +25,7 @@ export default function App() {
         foot on the moon or when rovers were sent to roam around on Mars.
       </TextExpander>
 
-      <TextExpander expanded={true} className="box">
+      <TextExpander expanded1={true} className="box">
         Space missions have given us incredible insights into our universe and
         have inspired future generations to keep reaching for the stars. Space
         travel is a pretty cool thing to think about. Who knows what we'll
@@ -34,6 +35,43 @@ export default function App() {
   );
 }
 
-function TextExpander() {
-  return <div>TODO</div>;
+function TextExpander({
+  children,
+  expanded1 = false,
+  buttonColor = "blue",
+  expandedButtonText = "Show Less",
+  collapseButtonText = "Show More",
+  collapsedNumWords = 10,
+}) {
+  const firstWords = React.Children.toArray(children).join("");
+  const [expanded, setExpanded] = useState(expanded1);
+  function handleExpanded() {
+    setExpanded(!expanded);
+  }
+
+  return (
+    <div className="box">
+      {expanded ? (
+        <p>
+          {children}
+          <span
+            onClick={handleExpanded}
+            style={{ color: buttonColor, cursor: "pointer" }}
+          >
+            {expandedButtonText}
+          </span>
+        </p>
+      ) : (
+        <p>
+          {firstWords.split(" ").slice(0, collapsedNumWords).join(" ")}...
+          <span
+            onClick={handleExpanded}
+            style={{ color: buttonColor, cursor: "pointer" }}
+          >
+            {collapseButtonText}
+          </span>
+        </p>
+      )}
+    </div>
+  );
 }
